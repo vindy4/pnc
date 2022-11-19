@@ -1,6 +1,8 @@
 import "./App.css";
 import React, { useState } from "react";
-import { Button, TextField, Alert, Card } from "@mui/material";
+import { Button, TextField, Alert } from "@mui/material";
+import Picker from "./Picker";
+
 const apiKey = "k_tzrvo3ni";
 
 function DropboxContainer(props) {
@@ -11,6 +13,7 @@ function DropboxContainer(props) {
   const [loading, setLoading] = useState(false);
   const [itemId, setItemId] = useState("");
   const [images, setImages] = useState([]);
+  const [selectedImages, setselectedImages] = useState([]);
   const [detailsFinal, setdetailsFinal] = useState(false);
 
   const getResourceDetails = () => {
@@ -62,7 +65,7 @@ function DropboxContainer(props) {
       rating: movieInfo.imDbRating,
       stars: movieInfo.starList.map((s) => s.name),
       genre: movieInfo.genres,
-      landscapeImages: images,
+      landscapeImages: selectedImages,
       directors: movieInfo.directorList.map((d) => d.name),
       posterUrl: movieInfo.image,
     };
@@ -139,7 +142,7 @@ function DropboxContainer(props) {
             variant="contained"
             onClick={() => {
               setdetailsFinal(true);
-              setData(fsObject);
+              setData(fsObject, movieInfo?.tvEpisodeInfo?.seriesTitle);
               setFlag(true);
             }}
           >
@@ -153,6 +156,40 @@ function DropboxContainer(props) {
               <span className="Red"> no</span>
             )}
           </p>
+          <div>
+            {images.length > 0 && (
+              <>
+                All Images
+                <Picker
+                  images={images.map((image, i) => ({ src: image, value: i }))}
+                  onPick={(v) => {
+                    const newImages = images.filter((img) => img !== v.src);
+                    setImages(newImages);
+                    setselectedImages([...selectedImages, v.src]);
+                  }}
+                />
+              </>
+            )}
+
+            {selectedImages.length > 0 && (
+              <>
+                selected images
+                <Picker
+                  images={selectedImages.map((image, i) => ({
+                    src: image,
+                    value: i,
+                  }))}
+                  onPick={(v) => {
+                    const newselectedImages = selectedImages.filter(
+                      (img) => img !== v.src
+                    );
+                    setselectedImages(newselectedImages);
+                    setImages([...images, v.src]);
+                  }}
+                />
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>

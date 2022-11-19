@@ -1,12 +1,12 @@
 import "./App.css";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Button, TextField, Alert, Card } from "@mui/material";
 
 require("isomorphic-fetch");
 var Dropbox = require("dropbox").Dropbox;
 
 const accessToken =
-  "sl.BTUk30BNxb8_Nz7geyQRikUCdXejHsWqF68ESmdEm6JkLCwHmGzwCfk4CVGynFq6UueBp1RnBCZSlQpiN7_Ylp_MXy_xTe6_C-Tj44VDvNtDLW1WKwa1mopxnxU6PCNneEerjJeU11Ov";
+  "sl.BTXEJG0Js1UDAX9URJH3ckM5PZUibvkukwqbtHlnP4a17OzOaiuDF44MyYltXT7EyXnLueS-LHQjDJejNC0CnqSChiYzdIQNnccNbUnavrl3GdomWk0V3WTb4cF2XopuJxLXnbeBI02o";
 var dbx = new Dropbox({ accessToken });
 
 function SearchList(props) {
@@ -43,12 +43,24 @@ function debounce(func, wait) {
 }
 
 function DropboxContainer(props) {
-  const { setData, setFlag } = props;
+  const { setData, setFlag, searchQuery } = props;
   const [list, setList] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedResource, setSelectedResource] = useState(null);
   const [shareablelink, setShareablelink] = useState(null);
+
+  useEffect(() => {
+    if (searchQuery) {
+      dbx
+        .sharingCreateSharedLinkWithSettings({
+          path: searchQuery,
+        })
+        .then((link) => {
+          console.log(link.result.url, "dfkjdfkjdfkj");
+        });
+    }
+  }, []);
 
   const getSharableLink = async (item) => {
     try {
@@ -103,6 +115,7 @@ function DropboxContainer(props) {
             variant="standard"
             onChange={debounceOnChange}
             sx={{ width: 400 }}
+            defaultValue={searchQuery}
           />
         </div>
         {loading ? (

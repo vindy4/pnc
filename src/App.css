@@ -66,3 +66,23 @@ overflow: auto;
   flex-direction: column;
 
 }
+
+.image_picker{
+  display: flex;
+  width: 1000px;
+  overflow: auto;
+}
+
+.responsive{
+  margin: 4px;
+}
+
+.ImagePicker{
+  display: flex;
+  width: 1000px;
+  overflow: auto;
+}
+
+.LandscapeImage{
+  margin: 4px;
+}

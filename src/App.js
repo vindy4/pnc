@@ -1,4 +1,4 @@
-import { Button, Alert, Checkbox, setRef } from "@mui/material";
+import { Button, Alert, Checkbox } from "@mui/material";
 import React, { useState } from "react";
 import DropBoxCont from "./DropBox";
 import Imdb from "./Imdb";
@@ -8,22 +8,35 @@ import { setMovie } from "./FireBase";
 function App() {
   const [fsData, setFsData] = useState({});
   const [error, setError] = useState(false);
-  const [isMovie, setIsMovie] = useState(false);
+  const [isMovie, setIsMovie] = useState(Boolean(false));
   const [isInCarausal, setIsInCarausal] = useState(false);
-  const [ott, setOtt] = useState("Netflix");
+  const [ott, setOtt] = useState("");
   const [entrySuccessfull, setEntrySuccessfull] = useState(false);
   const [isDbxLinkGenerated, setisDbxLinkGenerated] = useState(false);
   const [isImdmConfirmed, setisImdmConfirmed] = useState(false);
+  const [dbxSearchString, setdbxSearchString] = useState("");
+  const [nextEpisodeID, setnextEpisodeID] = useState("");
 
   const dbxData = (data) => {
     setFsData({ ...fsData, ...data });
   };
 
-  const imdbData = (data) => {
+  const imdbData = (data, nextEpisodeId) => {
     setFsData({ ...fsData, ...data });
+    if (!isMovie) {
+      setdbxSearchString(data.episodeName);
+    } else {
+      setdbxSearchString(data.name);
+    }
+    setnextEpisodeID(nextEpisodeId);
   };
 
   const addEntry = () => {
+    if (!ott) {
+      setError("Please select OTT");
+      return;
+    }
+
     fsData["iscarousel"] = isInCarausal;
     fsData["isTrending"] = true;
     fsData["platform"] = ott;
@@ -49,21 +62,24 @@ function App() {
         setMovie(fsData, isMovie ? "Movies" : "Series");
         setEntrySuccessfull("Entry was added in database");
         setTimeout(() => {
-          window.location.reload();
-        }, 1500);
+          if ("URLSearchParams" in window && !isMovie && nextEpisodeID) {
+            var searchParams = new URLSearchParams(window.location.search);
+            searchParams.set("tvId", nextEpisodeID);
+            window.location.search = searchParams.toString();
+          }
+        }, 500);
       } catch (error) {
         setError(error.message);
       }
     }
   };
 
+  console.log(fsData);
+
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
   return (
     <div className="MovieType">
       <div>
-        {entrySuccessfull && (
-          <Alert severity="success">{entrySuccessfull}!</Alert>
-        )}
         <span>
           Resource Type : <b> {isMovie ? "Movie" : "Tv Series"} </b>
         </span>
@@ -71,6 +87,7 @@ function App() {
           variant="contained"
           onClick={() => {
             setIsMovie(!isMovie);
+            localStorage.setItem("isMovie", isMovie);
           }}
           sx={{ marginLeft: "40px" }}
         >
@@ -88,17 +105,28 @@ function App() {
           }}
         />
       </div>
-      <DropBoxCont setData={dbxData} setFlag={setisDbxLinkGenerated} />
+
       {error && <Alert severity="error">{error}!</Alert>}
       <Imdb
         setData={imdbData}
         isSeires={!isMovie}
         setFlag={setisImdmConfirmed}
       />
+      {isImdmConfirmed && (
+        <DropBoxCont
+          setData={dbxData}
+          setFlag={setisDbxLinkGenerated}
+          searchQuery={dbxSearchString}
+        />
+      )}
+
+      {entrySuccessfull && (
+        <Alert severity="success">{entrySuccessfull}!</Alert>
+      )}
       <Button
         variant="contained"
         onClick={addEntry}
-        sx={{ marginLeft: "200px", marginTop: "50px" }}
+        sx={{ marginLeft: "400px", marginTop: "50px" }}
       >
         Add Entry to DataBase
       </Button>
