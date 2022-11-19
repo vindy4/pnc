@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import { Button, TextField, Alert } from "@mui/material";
 import Picker from "./Picker";
 
-const apiKey = "k_tzrvo3ni";
+// const apiKey = "k_tzrvo3ni";
+const apiKey = "k_05p3o8d3";
 
 function DropboxContainer(props) {
-  const { setData, isSeires, setFlag } = props;
+  const { setData, isSeires, setFlag, tvId } = props;
 
   const [movieInfo, setMovieInfo] = useState({});
   const [error, setError] = useState("");
@@ -142,7 +143,7 @@ function DropboxContainer(props) {
             variant="contained"
             onClick={() => {
               setdetailsFinal(true);
-              setData(fsObject, movieInfo?.tvEpisodeInfo?.seriesTitle);
+              setData(fsObject, movieInfo?.tvEpisodeInfo?.nextEpisodeId);
               setFlag(true);
             }}
           >
@@ -167,6 +168,7 @@ function DropboxContainer(props) {
                     setImages(newImages);
                     setselectedImages([...selectedImages, v.src]);
                   }}
+                  updateImage={setImages}
                 />
               </>
             )}

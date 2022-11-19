@@ -6,7 +6,7 @@ require("isomorphic-fetch");
 var Dropbox = require("dropbox").Dropbox;
 
 const accessToken =
-  "sl.BTXEJG0Js1UDAX9URJH3ckM5PZUibvkukwqbtHlnP4a17OzOaiuDF44MyYltXT7EyXnLueS-LHQjDJejNC0CnqSChiYzdIQNnccNbUnavrl3GdomWk0V3WTb4cF2XopuJxLXnbeBI02o";
+  "sl.BTbVSrzHfMSQXp-k5bV01BqC634xisKdkg03evew2q7vrTLwCCUfE8GNH9IAnCHTJoAroLh7PBvRDC3VDZG82LCRbm2pTU5bDzKLkleJahS2GA310X7OmPjj0PhCBP5jZmlFoC6E8kFO";
 var dbx = new Dropbox({ accessToken });
 
 function SearchList(props) {

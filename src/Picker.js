@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 
 const Picker = (props) => {
   const { images, onPick } = props;
-  const [filterImages, setFilterImages] = useState(images);
+  const [filterImages, setFilterImages] = useState([]);
+  const [imLoadingDone, setimLoadingDone] = useState(false);
   console.log(filterImages?.length);
 
   useEffect(() => {
@@ -17,46 +18,52 @@ const Picker = (props) => {
         )
     ).then(() => {
       console.log("images finished loading");
+      setimLoadingDone(true);
     });
   }, [true]);
 
   return (
-    <div className="ImagePicker">
-      {filterImages.map((im) => {
-        return (
-          <div
-            key={im.src}
-            className="LandscapeImage"
-            onClick={() => onPick({ im })}
-          >
+    <>
+      {imLoadingDone && <span className="Green"> loading done</span>}
+      <div className="ImagePicker">
+        {images.map((im, i) => {
+          return (
             <img
+              key={`${im.src}-${i}`}
               src={im.src}
               alt="nahi load hui bc"
-              width={200}
-              height={200}
+              style={{ display: "none" }}
               onLoad={(e) => {
-                console.log(
-                  e.target.naturalHeight,
-                  "height",
-                  "    ",
-                  e.target.naturalWidth,
-                  " width"
-                );
                 if (
-                  e.target.naturalHeight < 728 ||
-                  e.target.naturalWidth < 1024
+                  e.target.naturalHeight > 728 &&
+                  e.target.naturalWidth > 1024
                 ) {
-                  const fi = filterImages.filter(
-                    (fimgage) => fimgage.src !== im.src
-                  );
-                  setFilterImages(fi);
+                  console.log(filterImages.length, "reduced");
+
+                  setFilterImages([...filterImages, im]);
                 }
               }}
             />
-          </div>
-        );
-      })}
-    </div>
+          );
+        })}
+        {filterImages.map((im, i) => {
+          return (
+            <div
+              key={`${im.src}-${(i + 1) * 300}`}
+              className="LandscapeImage"
+              onClick={() => onPick(im)}
+            >
+              <img
+                src={im.src}
+                alt="nahi load hui bc"
+                width={200}
+                height={200}
+              />
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 };
 

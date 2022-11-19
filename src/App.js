@@ -21,6 +21,11 @@ function App() {
     setFsData({ ...fsData, ...data });
   };
 
+  const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  });
+  let tvId = params.tvId; // "some_value"
+
   const imdbData = (data, nextEpisodeId) => {
     setFsData({ ...fsData, ...data });
     if (!isMovie) {
@@ -74,8 +79,6 @@ function App() {
     }
   };
 
-  console.log(fsData);
-
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
   return (
     <div className="MovieType">
@@ -111,6 +114,7 @@ function App() {
         setData={imdbData}
         isSeires={!isMovie}
         setFlag={setisImdmConfirmed}
+        tvId={tvId}
       />
       {isImdmConfirmed && (
         <DropBoxCont
