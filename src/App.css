@@ -1,0 +1,68 @@
+.DropboxContainer {
+  text-align: center;
+  padding: 20px;
+ display: flex;
+ max-height: 500px;
+overflow: auto;
+}
+
+
+.Heading{
+  padding: 20px;
+}
+
+.SearchDropBox{
+  display: flex;
+  position: sticky;
+    top: 0;
+}
+
+
+.ImdbContainer{
+  padding: 20px;
+}
+
+.DropboxList{
+  list-style: none;
+}
+
+.DropboxListItem{
+  padding: 8px 8px;
+}
+
+.DropboxListItem:hover{
+  background-color: #dbdee5;
+}
+
+.CloseSelected{
+  padding: 16px 16px;
+}
+
+.Green{
+  color: green;
+}
+
+.Red{
+  color: red;
+}
+
+.MovieType{
+  padding: 20px;
+}
+
+
+.Carausal{
+  margin-left: 50px;
+}
+
+.ImdbContainer{
+  display: flex;
+  border: 1px solid ;
+  justify-content: space-evenly;
+}
+
+.searchID{
+  display: flex;
+  flex-direction: column;
+
+}
